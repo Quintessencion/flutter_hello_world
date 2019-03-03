@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hello_world/NewBox.dart';
+import 'package:flutter_hello_world/async/sand.glass.dart';
 import 'package:flutter_hello_world/input.form.dart';
 import 'package:flutter_hello_world/main/main.screen.dart';
 
-main() {
+void main() => runApp(new MaterialApp(home: new Scaffold(body: new Clock())));
+
+main4() {
   runApp(
     new MaterialApp(
         debugShowCheckedModeBanner: false,
