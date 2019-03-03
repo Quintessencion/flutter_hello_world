@@ -1,13 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hello_world/NewBox.dart';
 import 'package:flutter_hello_world/input.form.dart';
+import 'package:flutter_hello_world/main/main.screen.dart';
 
-void main() {
+main() {
+  runApp(
+    new MaterialApp(
+        debugShowCheckedModeBanner: false,
+        initialRoute: '/',
+        routes: {
+          '/': (BuildContext context) => new MainScreen(),
+          '/second': (BuildContext context) => new SecondScreen()
+        },
+        onGenerateRoute: (routeSettings) {
+          List<String> paths = routeSettings.name.split('/');
+
+          if (paths[1] == 'second') {
+            return new MaterialPageRoute(
+                builder: (context) => new SecondScreen(id: paths[2]),
+                settings: routeSettings);
+          }
+        }),
+  );
+}
+
+void main3() {
   runApp(new MaterialApp(
     debugShowCheckedModeBanner: false,
     home: new Scaffold(
-        appBar: new AppBar(title: new Text('Форма ввода')),
-        body: InputForm()),
+        appBar: new AppBar(title: new Text('Форма ввода')), body: InputForm()),
   ));
 }
 
