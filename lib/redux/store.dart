@@ -30,7 +30,7 @@ List<Item> itemReducer(List<Item> state, action) {
   }
 
   if (action is RemoveItemsAction) {
-    return AppState.createTextList();
+    return AppState.createTestList();
   }
 
   return state;

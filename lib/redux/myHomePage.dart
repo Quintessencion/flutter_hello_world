@@ -72,21 +72,15 @@ class ItemListWidget extends StatelessWidget {
         children: model.items
             .map(
               (Item item) => Container(
-                    child: Column(
-                      children: <Widget>[
-                        ListTile(
-                          title: Text(item.body),
-                          leading: IconButton(
-                            icon: Icon(Icons.delete),
-                            onPressed: () => model.onRemoveItem(item),
-                          ),
-                        ),
-                        Divider(
-                          color: Colors.white,
-                        ),
-                      ],
-                    ),
-                  ),
+                      child: Column(children: <Widget>[
+                    ListTile(
+                        title: Text(item.body),
+                        leading: IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () => model.onRemoveItem(item),
+                        )),
+                    Divider(color: Colors.white),
+                  ])),
             )
             .toList());
   }

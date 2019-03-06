@@ -5,9 +5,9 @@ class AppState {
 
   AppState({@required this.items});
 
-  AppState.initialState() : items = createTextList();
+  AppState.initialState() : items = createTestList();
 
-  static createTextList() {
+  static createTestList() {
     return <Item>[]
       ..add(Item(id: -1, body: 'Test item 1'))
       ..add(Item(id: -2, body: 'Test item 2'));
