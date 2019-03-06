@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hello_world/redux/actions/actions.dart';
 import 'package:flutter_hello_world/redux/model/model.dart';
-import 'package:flutter_hello_world/redux/reducers/reducers.dart';
+import 'package:flutter_hello_world/redux/store.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
@@ -9,10 +9,11 @@ class ReduxApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoreProvider<AppState>(
-        store: Store<AppState>(appStateReducer,
-            initialState: AppState.initialState()),
+        store: prepareStore(),
         child: MaterialApp(
-            title: 'Redux Text', theme: ThemeData.dark(), home: MyHomePage()));
+          theme: ThemeData.dark(),
+          home: MyHomePage(),
+        ));
   }
 }
 
@@ -20,16 +21,14 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Redux Items'),
-      ),
+      appBar: AppBar(title: Text('Redux Items')),
       body: StoreConnector<AppState, _ViewModel>(
         converter: (Store<AppState> store) => _ViewModel.create(store),
-        builder: (BuildContext context, _ViewModel viewModel) => Column(
+        builder: (BuildContext context, _ViewModel vm) => Column(
               children: <Widget>[
-                AddItemWidget(viewModel),
-                Expanded(child: ItemListWidget(viewModel)),
-                RemoveItemButton(viewModel)
+                AddItemWidget(vm),
+                Expanded(child: ItemListWidget(vm)),
+                RemoveItemButton(vm)
               ],
             ),
       ),
@@ -71,12 +70,24 @@ class ItemListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
         children: model.items
-            .map((Item item) => ListTile(
-                title: Text(item.body),
-                leading: IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () => model.onRemoveItem(item),
-                )))
+            .map(
+              (Item item) => Container(
+                    child: Column(
+                      children: <Widget>[
+                        ListTile(
+                          title: Text(item.body),
+                          leading: IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () => model.onRemoveItem(item),
+                          ),
+                        ),
+                        Divider(
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
+            )
             .toList());
   }
 }

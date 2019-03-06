@@ -5,7 +5,13 @@ class AppState {
 
   AppState({@required this.items});
 
-  AppState.initialState() : items = List.unmodifiable(<Item>[]);
+  AppState.initialState() : items = createTextList();
+
+  static createTextList() {
+    return <Item>[]
+      ..add(Item(id: -1, body: 'Test item 1'))
+      ..add(Item(id: -2, body: 'Test item 2'));
+  }
 }
 
 class Item {
