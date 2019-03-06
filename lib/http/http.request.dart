@@ -22,17 +22,17 @@ class HttpTestState extends State {
 
   _makeRequest() async {
     try {
-      var response = await http.get(
-          'https://www.googleapis.com/drive/v3/files/1i9PcKIrkaA7dR_K2q7v3Jjy_JAPXPP-F?key=???&alt=media',
-          headers: {'Accept': 'application/json'});
+//      var response = await http.get(
+//          'https://www.googleapis.com/drive/v3/files/1i9PcKIrkaA7dR_K2q7v3Jjy_JAPXPP-F?key=???&alt=media',
+//          headers: {'Accept': 'application/json'});
 //      var response = await http.get('https://json.flutter.su/echo');
-//      var response = await http.post('https://json.flutter.su/echo', body: {
-//        'name': 'first name',
-//        'second name': 'second name',
-//        'age': '18'
-//      }, headers: {
-//        'Accept': 'application/json'
-//      });
+      var response = await http.post('https://json.flutter.su/echo', body: {
+        'name': 'first name',
+        'second name': 'second name',
+        'age': '18'
+      }, headers: {
+        'Accept': 'application/json'
+      });
 
       showMessage(response.statusCode.toString() + '\n\n' + response.body,
           Colors.green);

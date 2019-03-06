@@ -4,8 +4,13 @@ import 'package:flutter_hello_world/async/sand.glass.dart';
 import 'package:flutter_hello_world/http/http.request.dart';
 import 'package:flutter_hello_world/input.form.dart';
 import 'package:flutter_hello_world/main/main.screen.dart';
+import 'package:flutter_hello_world/redux/myHomePage.dart';
 
-void main() =>
+void main() {
+  runApp(ReduxApp());
+}
+
+void main6() =>
     runApp(new MaterialApp(home: new Scaffold(body: new HttpTest())));
 
 void main5() => runApp(new MaterialApp(home: new Scaffold(body: new Clock())));
