@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hello_world/redux/actions/actions.dart';
-import 'package:flutter_hello_world/redux/model/model.dart';
+import 'package:flutter_hello_world/redux/model/appState.dart';
+import 'package:flutter_hello_world/redux/model/itemState.dart';
 import 'package:flutter_hello_world/redux/store.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_redux_dev_tools/flutter_redux_dev_tools.dart';
 import 'package:redux/redux.dart';
+import 'package:redux_dev_tools/redux_dev_tools.dart';
 
 class ReduxApp extends StatelessWidget {
   @override
@@ -12,12 +15,20 @@ class ReduxApp extends StatelessWidget {
         store: prepareStore(),
         child: MaterialApp(
           theme: ThemeData.dark(),
-          home: MyHomePage(),
+          home: StoreBuilder<AppState>(
+            onInit: (store) => store.dispatch(GitItemsAction()),
+            builder: (BuildContext context, Store<AppState> store) =>
+                MyHomePage(store),
+          ),
         ));
   }
 }
 
 class MyHomePage extends StatelessWidget {
+  final DevToolsStore<AppState> store;
+
+  MyHomePage(this.store);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,6 +43,7 @@ class MyHomePage extends StatelessWidget {
               ],
             ),
       ),
+      drawer: Container(child: ReduxDevTools(store)),
     );
   }
 }

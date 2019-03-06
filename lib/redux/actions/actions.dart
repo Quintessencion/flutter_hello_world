@@ -1,4 +1,4 @@
-import 'package:flutter_hello_world/redux/model/model.dart';
+import 'package:flutter_hello_world/redux/model/itemState.dart';
 
 class AddItemAction {
   static int _id = 0;
@@ -18,3 +18,11 @@ class RemoveItemAction {
 }
 
 class RemoveItemsAction {}
+
+class GitItemsAction {}
+
+class LoadedItemAction {
+  final List<Item> items;
+
+  LoadedItemAction(this.items);
+}

@@ -1,10 +1,13 @@
 import 'package:flutter_hello_world/redux/actions/actions.dart';
-import 'package:flutter_hello_world/redux/model/model.dart';
-import 'package:redux/redux.dart';
+import 'package:flutter_hello_world/redux/middleware/middleware.dart';
+import 'package:flutter_hello_world/redux/model/appState.dart';
+import 'package:flutter_hello_world/redux/model/itemState.dart';
+import 'package:redux_dev_tools/redux_dev_tools.dart';
 
-Store<AppState> prepareStore() {
-  return Store<AppState>(
+DevToolsStore<AppState> prepareStore() {
+  return DevToolsStore<AppState>(
     (AppState state, dynamic action) => _getReducers(state, action),
+    middleware: [appStateMiddleware],
     initialState: AppState.initialState(),
   );
 }
@@ -14,12 +17,6 @@ AppState _getReducers(AppState state, action) =>
 
 List<Item> itemReducer(List<Item> state, action) {
   if (action is AddItemAction) {
-    for (var item in state) {
-      if (item.id == -1 || item.id == -2) {
-        return []..add(Item(id: action.id, body: action.item));
-      }
-    }
-
     return []
       ..addAll(state)
       ..add(Item(id: action.id, body: action.item));
@@ -30,7 +27,11 @@ List<Item> itemReducer(List<Item> state, action) {
   }
 
   if (action is RemoveItemsAction) {
-    return AppState.createTestList();
+    return List.unmodifiable([]);
+  }
+
+  if (action is LoadedItemAction) {
+    return action.items;
   }
 
   return state;
