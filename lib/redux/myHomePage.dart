@@ -86,11 +86,18 @@ class ItemListWidget extends StatelessWidget {
               (Item item) => Container(
                       child: Column(children: <Widget>[
                     ListTile(
-                        title: Text(item.body),
-                        leading: IconButton(
-                          icon: Icon(Icons.delete),
-                          onPressed: () => model.onRemoveItem(item),
-                        )),
+                      title: Text(item.body),
+                      leading: IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () => model.onRemoveItem(item),
+                      ),
+                      trailing: Checkbox(
+                        value: item.completed,
+                        onChanged: (b) {
+                          model.onCompleted(item);
+                        },
+                      ),
+                    ),
                     Divider(color: Colors.white),
                   ])),
             )
@@ -117,9 +124,14 @@ class _ViewModel {
   final Function(String) onAddItem;
   final Function(Item) onRemoveItem;
   final Function() onRemoveItems;
+  final Function(Item) onCompleted;
 
   _ViewModel(
-      {this.items, this.onAddItem, this.onRemoveItem, this.onRemoveItems});
+      {this.items,
+      this.onAddItem,
+      this.onRemoveItem,
+      this.onRemoveItems,
+      this.onCompleted});
 
   factory _ViewModel.create(Store<AppState> store) {
     _onAddITem(String body) {
@@ -134,10 +146,15 @@ class _ViewModel {
       store.dispatch(RemoveItemsAction());
     }
 
+    _onCompleted(Item item) {
+      store.dispatch(ItemCompletedAction(item));
+    }
+
     return _ViewModel(
         items: store.state.items,
         onAddItem: _onAddITem,
         onRemoveItem: _onRemoveItem,
-        onRemoveItems: _onRemoveItems);
+        onRemoveItems: _onRemoveItems,
+        onCompleted: _onCompleted);
   }
 }
