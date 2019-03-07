@@ -7,7 +7,7 @@ import 'package:redux_dev_tools/redux_dev_tools.dart';
 
 DevToolsStore<AppState> prepareStore() {
   return DevToolsStore<AppState>(
-        (AppState state, dynamic action) => appStateReducer(state, action),
+    (AppState state, dynamic action) => appStateReducer(state, action),
     middleware: appStateMiddleware(),
     initialState: AppState.initialState(),
   );
@@ -18,7 +18,9 @@ AppState appStateReducer(AppState state, action) {
 }
 
 Reducer<List<Item>> itemReducer = combineReducers<List<Item>>([
-  TypedReducer<List<Item>, AddItemAction>(addItemReducer),
+  TypedReducer<List<Item>, AddItemAction>(
+      (List<Item> items, AddItemAction action) =>
+          addItemReducer(items, action)),
   TypedReducer<List<Item>, RemoveItemAction>(removeItemReducer),
   TypedReducer<List<Item>, RemoveItemsAction>(removeItemsReducer),
   TypedReducer<List<Item>, LoadedItemAction>(loadItemsReducer),
@@ -32,8 +34,7 @@ List<Item> addItemReducer(List<Item> items, AddItemAction action) {
 }
 
 List<Item> removeItemReducer(List<Item> items, RemoveItemAction action) {
-  return List.unmodifiable(List.from(items)
-    ..remove(action.item));
+  return List.unmodifiable(List.from(items)..remove(action.item));
 }
 
 List<Item> removeItemsReducer(List<Item> items, RemoveItemsAction action) => [];
@@ -43,10 +44,10 @@ List<Item> loadItemsReducer(List<Item> items, LoadedItemAction action) {
 }
 
 List<Item> loadCompletedReducer(List<Item> items, ItemCompletedAction action) {
-  return items.map((item) =>
-  item.id == action.item.id
-      ? item.copyWith(completed: !item.completed)
-      : item)
+  return items
+      .map((item) => item.id == action.item.id
+          ? item.copyWith(completed: !item.completed)
+          : item)
       .toList();
 }
 
@@ -82,4 +83,4 @@ List<Item> loadCompletedReducer(List<Item> items, ItemCompletedAction action) {
 //  }
 //
 //  return state;
-}
+//}
