@@ -18,6 +18,7 @@ List<Middleware<AppState>> appStateMiddleware(
     TypedMiddleware<AppState, RemoveItemAction>(SaveStateItemMiddleware()),
     TypedMiddleware<AppState, RemoveItemsAction>(SaveStateItemMiddleware()),
     TypedMiddleware<AppState, GitItemsAction>(LoadItemMiddleware()),
+    TypedMiddleware<AppState, ItemCompletedAction>(SaveStateItemMiddleware()),
   ];
 }
 
