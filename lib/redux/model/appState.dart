@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_hello_world/redux/model/itemState.dart';
 
+@immutable
 class AppState {
   final List<Item> items;
 

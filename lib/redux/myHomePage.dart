@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hello_world/MyBody.dart';
 import 'package:flutter_hello_world/redux/actions/actions.dart';
+import 'package:flutter_hello_world/redux/baseScreenState.dart';
 import 'package:flutter_hello_world/redux/model/appState.dart';
 import 'package:flutter_hello_world/redux/model/itemState.dart';
 import 'package:flutter_hello_world/redux/store.dart';
@@ -20,6 +22,10 @@ class ReduxApp extends StatelessWidget {
             builder: (BuildContext context, Store<AppState> store) =>
                 MyHomePage(store),
           ),
+          routes: <String, WidgetBuilder>{
+            "/main": (BuildContext context) => MyHomePage(),
+            "/second": (BuildContext context) => MyBody(),
+          },
         ));
   }
 }
@@ -39,6 +45,7 @@ class MyHomePage extends StatelessWidget {
         builder: (BuildContext context, _ViewModel vm) => Column(
               children: <Widget>[
                 AddItemWidget(vm),
+                SizedBox(height: 20.0),
                 Expanded(child: ItemListWidget(vm)),
                 RemoveItemButton(vm)
               ],
@@ -58,51 +65,66 @@ class AddItemWidget extends StatefulWidget {
   State<StatefulWidget> createState() => _AddItemState();
 }
 
-class _AddItemState extends State<AddItemWidget> {
+class _AddItemState extends BaseScreenState<AddItemWidget> {
   final TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
-      decoration: InputDecoration(hintText: 'add an item'),
+      decoration: InputDecoration(
+        hintText: 'add an item',
+        contentPadding:
+            EdgeInsets.only(left: 20.0, right: 20.0, top: 8.0, bottom: 8.0),
+      ),
       onSubmitted: (String s) {
         widget.model.onAddItem(s);
         controller.text = '';
+        showToast('Item added');
       },
     );
   }
 }
 
-class ItemListWidget extends StatelessWidget {
+class ItemListWidget extends StatefulWidget {
   final _ViewModel model;
 
   ItemListWidget(this.model);
 
   @override
+  _ItemListWidgetState createState() => _ItemListWidgetState();
+}
+
+class _ItemListWidgetState extends BaseScreenState<ItemListWidget> {
+  var _colorCounter = 1;
+
+  @override
   Widget build(BuildContext context) {
     return ListView(
-        children: model.items
-            .map(
-              (Item item) => Container(
-                      child: Column(children: <Widget>[
-                    ListTile(
-                      title: Text(item.body),
-                      leading: IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () => model.onRemoveItem(item),
-                      ),
-                      trailing: Checkbox(
-                        value: item.completed,
-                        onChanged: (b) {
-                          model.onCompleted(item);
-                        },
-                      ),
-                    ),
-                    Divider(color: Colors.white),
-                  ])),
-            )
-            .toList());
+        children: widget.model.items.map(
+      (Item item) {
+        _colorCounter++;
+        return Container(
+            color:
+                _colorCounter % 2 == 0 ? Color(0xFF00f7ff) : Colors.amberAccent,
+            child: Column(children: <Widget>[
+              ListTile(
+                title: Text(item.body),
+                leading: IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () => widget.model.onRemoveItem(item),
+                ),
+                trailing: Checkbox(
+                  value: item.completed,
+                  onChanged: (b) {
+                    openScreen(MyBody());
+                  },
+                ),
+              ),
+              Divider(color: Colors.white),
+            ]));
+      },
+    ).toList());
   }
 }
 

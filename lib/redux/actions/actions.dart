@@ -32,3 +32,9 @@ class ItemCompletedAction {
 
   ItemCompletedAction(this.item);
 }
+
+class ItemClickAction {
+  final Item item;
+
+  ItemClickAction(this.item);
+}
