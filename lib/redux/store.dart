@@ -14,13 +14,13 @@ DevToolsStore<AppState> prepareStore() {
 }
 
 AppState appStateReducer(AppState state, action) {
-  return AppState(items: itemReducer(state.items, action));
+  return AppState(
+    items: itemReducer(state.items, action),
+  );
 }
 
 Reducer<List<Item>> itemReducer = combineReducers<List<Item>>([
-  TypedReducer<List<Item>, AddItemAction>(
-      (List<Item> items, AddItemAction action) =>
-          addItemReducer(items, action)),
+  TypedReducer<List<Item>, AddItemAction>((List<Item> items, AddItemAction action) => addItemReducer(items, action)),
   TypedReducer<List<Item>, RemoveItemAction>(removeItemReducer),
   TypedReducer<List<Item>, RemoveItemsAction>(removeItemsReducer),
   TypedReducer<List<Item>, LoadedItemAction>(loadItemsReducer),

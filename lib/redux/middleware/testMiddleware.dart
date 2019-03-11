@@ -4,6 +4,7 @@ import 'package:redux/redux.dart';
 class TestMiddleware extends MiddlewareClass<AppState> {
   @override
   void call(Store<AppState> store, action, NextDispatcher next) {
+    print("TestMiddleware call...");
     next(action);
   }
 }

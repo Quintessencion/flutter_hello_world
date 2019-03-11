@@ -16,7 +16,7 @@ class ReduxApp extends StatelessWidget {
         child: MaterialApp(
           theme: ThemeData.dark(),
           home: StoreBuilder<AppState>(
-            onInit: (store) => store.dispatch(GitItemsAction()),
+//            onInit: (store) => store.dispatch(GitItemsAction()),//onInit можно вызвать отсюда
             builder: (BuildContext context, Store<AppState> store) =>
                 MyHomePage(store),
           ),
@@ -35,6 +35,7 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(title: Text('Redux Items')),
       body: StoreConnector<AppState, _ViewModel>(
         converter: (Store<AppState> store) => _ViewModel.create(store),
+        onInit: (store) => store.dispatch(GitItemsAction()),
         builder: (BuildContext context, _ViewModel vm) => Column(
               children: <Widget>[
                 AddItemWidget(vm),
