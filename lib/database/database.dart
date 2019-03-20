@@ -46,40 +46,46 @@ class Database {
     return reference.key;
   }
 
-  static Future<void> saveSum(String mountainKey, String name) async {
-    String noteKey = await _getAccountKey();
+  static Future<void> saveSum(String noteId, String name) async {
+    String accountKey = await _getAccountKey();
 
     return reference
         .child(USERS)
-        .child(noteKey)
+        .child(accountKey)
         .child(COST_DATA)
-        .child(mountainKey)
+        .child(noteId)
         .child(SUM)
         .set(name);
   }
 
-  static Future<Query> removeExpenseRecord(String noteKey) async {
+  static Future<Query> removeExpenseRecord(String noteId) async {
     String accountKey = await _getAccountKey();
 
     reference
         .child(USERS)
         .child(accountKey)
         .child(COST_DATA)
-        .child(noteKey)
+        .child(noteId)
         .remove();
 
     return queryExpense();
   }
 
+  static Future<Query> removeAll() async {
+    reference.remove();
+
+    return queryExpense();
+  }
+
   static Future<StreamSubscription<Event>> getSumStream(
-      String noteKey, void onData(String name)) async {
+      String noteId, void onData(String name)) async {
     String accountKey = await _getAccountKey();
 
     StreamSubscription<Event> subscription = reference
         .child(USERS)
         .child(accountKey)
         .child(COST_DATA)
-        .child(noteKey)
+        .child(noteId)
         .child(SUM)
         .onValue
         .listen((Event event) {

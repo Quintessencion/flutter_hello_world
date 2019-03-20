@@ -6,9 +6,9 @@ import 'package:flutter_hello_world/database/database.dart';
 class EditSumPage extends StatefulWidget {
   static String routeName = '/edit_sum';
 
-  final String mountainKey;
+  final String noteId;
 
-  EditSumPage({Key key, this.mountainKey}) : super(key: key);
+  EditSumPage({Key key, this.noteId}) : super(key: key);
 
   @override
   _EditSumPageState createState() => new _EditSumPageState();
@@ -23,7 +23,7 @@ class _EditSumPageState extends State<EditSumPage> {
   void initState() {
     _nameFieldTextController.clear();
 
-    Database.getSumStream(widget.mountainKey, _updateSum)
+    Database.getSumStream(widget.noteId, _updateSum)
         .then((StreamSubscription s) => _subscriptionName = s);
 
     super.initState();
@@ -53,7 +53,7 @@ class _EditSumPageState extends State<EditSumPage> {
                   labelText: "Enter sum",
                   hintText: "Enter the desired amount..."),
               onChanged: (String value) {
-                Database.saveSum(widget.mountainKey, value);
+                Database.saveSum(widget.noteId, value);
               },
             ),
           )
