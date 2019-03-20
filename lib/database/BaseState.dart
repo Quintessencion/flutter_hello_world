@@ -7,6 +7,10 @@ abstract class BaseState<S extends StatefulWidget> extends State<S> {
         context, new MaterialPageRoute(builder: (context) => widgetScreen));
   }
 
+  Future<dynamic> openNamedScreen(String name) {
+    return Navigator.of(context).pushNamed(name);
+  }
+
   void openScreenClearTop(StatefulWidget widgetScreen) {
     Navigator.pushAndRemoveUntil(
         context,

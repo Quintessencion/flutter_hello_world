@@ -6,6 +6,8 @@ import 'package:flutter_hello_world/database/database.dart';
 import 'package:flutter_hello_world/database/editSum.dart';
 
 class FirebaseList extends StatefulWidget {
+  static const String routeName = "/note_list";
+
   @override
   State<StatefulWidget> createState() => _FirebaseListState();
 }
