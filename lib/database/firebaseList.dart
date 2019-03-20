@@ -20,6 +20,10 @@ class _FirebaseListState extends BaseState<FirebaseList> {
     super.initState();
   }
 
+  _reInitState(Query query) => setState(() {
+        _query = query;
+      });
+
   @override
   Widget build(BuildContext context) {
     Widget body = Text("The list is empty...");
@@ -86,8 +90,4 @@ class _FirebaseListState extends BaseState<FirebaseList> {
 
   _removeAll() =>
       Database.removeAll().then((Query query) => _reInitState(query));
-
-  _reInitState(Query query) => setState(() {
-        _query = query;
-      });
 }

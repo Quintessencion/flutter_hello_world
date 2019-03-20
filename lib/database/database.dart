@@ -46,7 +46,7 @@ class Database {
     return reference.key;
   }
 
-  static Future<void> saveSum(String snapshotKey, String name) async {
+  static Future<void> saveSum(String snapshotKey, String sum) async {
     String accountKey = await _getAccountKey();
 
     return reference
@@ -55,7 +55,7 @@ class Database {
         .child(COST_DATA)
         .child(snapshotKey)
         .child(SUM)
-        .set(name);
+        .set(sum);
   }
 
   static Future<Query> removeCostRecord(String snapshotKey) async {

@@ -24,6 +24,7 @@ class _EditSumPageState extends BaseState<EditSumPage> {
       Database.getSumStream(widget.snapshotKey, _updateSum)
           .then((StreamSubscription s) => _subscriptionName = s);
     }
+
     super.initState();
   }
 
@@ -46,11 +47,13 @@ class _EditSumPageState extends BaseState<EditSumPage> {
         children: <Widget>[
           new ListTile(
             title: new TextField(
+              autofocus: true,
               controller: _nameFieldTextController,
               decoration: new InputDecoration(
-                  icon: new Icon(Icons.edit),
-                  labelText: "Enter sum",
-                  hintText: "Enter the desired amount..."),
+                icon: new Icon(Icons.edit),
+                labelText: "Enter sum",
+                hintText: "Enter the desired amount...",
+              ),
               onSubmitted: (String value) => _submitCostRecord(value),
             ),
           )
@@ -66,14 +69,12 @@ class _EditSumPageState extends BaseState<EditSumPage> {
     }
 
     if (widget.snapshotKey != null) {
-      Database.saveSum(widget.snapshotKey, value);
+      Database.saveSum(widget.snapshotKey, value).then((nothing) => back());
     } else {
       Database.createCostRecord().then((String snapshotKey) {
-        Database.saveSum(snapshotKey, value);
+        Database.saveSum(snapshotKey, value).then((nothing) => back());
       });
     }
-
-    back();
   }
 
   _updateSum(String sum) {
