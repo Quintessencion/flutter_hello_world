@@ -46,26 +46,26 @@ class Database {
     return reference.key;
   }
 
-  static Future<void> saveSum(String noteId, String name) async {
+  static Future<void> saveSum(String snapshotKey, String name) async {
     String accountKey = await _getAccountKey();
 
     return reference
         .child(USERS)
         .child(accountKey)
         .child(COST_DATA)
-        .child(noteId)
+        .child(snapshotKey)
         .child(SUM)
         .set(name);
   }
 
-  static Future<Query> removeCostRecord(String noteId) async {
+  static Future<Query> removeCostRecord(String snapshotKey) async {
     String accountKey = await _getAccountKey();
 
     reference
         .child(USERS)
         .child(accountKey)
         .child(COST_DATA)
-        .child(noteId)
+        .child(snapshotKey)
         .remove();
 
     return queryExpense();
@@ -78,14 +78,14 @@ class Database {
   }
 
   static Future<StreamSubscription<Event>> getSumStream(
-      String noteId, void onData(String name)) async {
+      String snapshotKey, void onData(String name)) async {
     String accountKey = await _getAccountKey();
 
     StreamSubscription<Event> subscription = reference
         .child(USERS)
         .child(accountKey)
         .child(COST_DATA)
-        .child(noteId)
+        .child(snapshotKey)
         .child(SUM)
         .onValue
         .listen((Event event) {
