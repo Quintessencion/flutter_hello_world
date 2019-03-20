@@ -9,9 +9,10 @@ class FirebaseApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Firebase',
       theme: ThemeData.dark(),
-      home: ListExpense(),
+      home: ListCost(),
       routes: <String, WidgetBuilder>{
         EditSumPage.routeName: (context) => EditSumPage()
       },
@@ -19,12 +20,12 @@ class FirebaseApp extends StatelessWidget {
   }
 }
 
-class ListExpense extends StatefulWidget {
+class ListCost extends StatefulWidget {
   @override
-  _ListExpenseState createState() => _ListExpenseState();
+  _ListCostState createState() => _ListCostState();
 }
 
-class _ListExpenseState extends BaseState<ListExpense> {
+class _ListCostState extends BaseState<ListCost> {
   Query _query;
 
   @override
@@ -84,13 +85,15 @@ class _ListExpenseState extends BaseState<ListExpense> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: _createCostRecord,
+        foregroundColor: Colors.black,
+        backgroundColor: Colors.white,
       ),
     );
   }
 
   _createCostRecord() => openScreen(EditSumPage());
 
-  void _edit(String snapshotKey) {
+  _edit(String snapshotKey) {
     openScreen(EditSumPage(snapshotKey: snapshotKey));
   }
 
