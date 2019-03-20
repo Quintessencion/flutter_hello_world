@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hello_world/database/BaseState.dart';
 import 'package:flutter_hello_world/database/firebaseList.dart';
-import 'package:flutter_hello_world/database/home.dart';
 
 class LoginPage extends StatefulWidget {
   static String routeName = '/login_page';
@@ -58,12 +57,11 @@ class _LoginPageState extends BaseState<LoginPage> {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       try {
-        FirebaseUser user = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: _email, password: _password);
-//        Navigator.push(
-//            context, MaterialPageRoute(builder: (context) => Home(user: user)));
-
-        openNamedScreen(FirebaseList.routeName);
+        FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: _email, password: _password)
+            .then((FirebaseUser user) {
+          openScreenClearTop(FirebaseList(user: user));
+        });
       } catch (exception) {
         showToast(exception.message);
       }

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,13 @@ import 'package:flutter_hello_world/database/editSum.dart';
 class FirebaseList extends StatefulWidget {
   static const String routeName = "/note_list";
 
+  final FirebaseUser user;
+  Database _database;
+
+  FirebaseList({Key key, this.user}) : super(key: key) {
+    _database = Database(user.uid);
+  }
+
   @override
   State<StatefulWidget> createState() => _FirebaseListState();
 }
@@ -17,7 +25,7 @@ class _FirebaseListState extends BaseState<FirebaseList> {
 
   @override
   void initState() {
-    Database.queryExpense().then((Query query) => _reInitState(query));
+    widget._database.queryExpense().then((Query query) => _reInitState(query));
 
     super.initState();
   }
@@ -81,15 +89,17 @@ class _FirebaseListState extends BaseState<FirebaseList> {
     );
   }
 
-  _createCostRecord() => openScreen(EditSumPage());
+  _createCostRecord() => openScreen(EditSumPage(database: widget._database));
 
   _edit(String snapshotKey) {
-    openScreen(EditSumPage(snapshotKey: snapshotKey));
+    openScreen(
+        EditSumPage(snapshotKey: snapshotKey, database: widget._database));
   }
 
-  _remove(String snapshotKey) => Database.removeCostRecord(snapshotKey)
+  _remove(String snapshotKey) => widget._database
+      .removeCostRecord(snapshotKey)
       .then((Query query) => _reInitState(query));
 
   _removeAll() =>
-      Database.removeAll().then((Query query) => _reInitState(query));
+      widget._database.removeAll().then((Query query) => _reInitState(query));
 }

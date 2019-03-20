@@ -14,9 +14,13 @@ class Database {
   static const String SUM = "sum";
   static const String TIME_CREATION = "created";
 
-  static DatabaseReference reference = FirebaseDatabase.instance.reference();
+  final String uid;
 
-  static Future<Query> queryExpense() async {
+  Database(this.uid);
+
+  DatabaseReference reference = FirebaseDatabase.instance.reference();
+
+  Future<Query> queryExpense() async {
     String accountKey = await _getAccountKey();
 
     return reference
@@ -26,27 +30,18 @@ class Database {
         .orderByChild(TIME_CREATION);
   }
 
-  static Future<String> createCostRecord() async {
-    String noteKey = await _getAccountKey();
+  Future<void> createCostRecord(String value) async {
+    String accountKey = await _getAccountKey();
 
     var note = <String, dynamic>{
-      SUM: '',
+      SUM: value,
       TIME_CREATION: _getCurrentNow(),
     };
 
-    DatabaseReference reference = FirebaseDatabase.instance
-        .reference()
-        .child(USERS)
-        .child(noteKey)
-        .child(COST_DATA)
-        .push();
-
-    reference.set(note);
-
-    return reference.key;
+    reference.child(USERS).child(accountKey).child(COST_DATA).push().set(note);
   }
 
-  static Future<void> saveSum(String snapshotKey, String sum) async {
+  Future<void> saveSum(String snapshotKey, String sum) async {
     String accountKey = await _getAccountKey();
 
     return reference
@@ -58,7 +53,7 @@ class Database {
         .set(sum);
   }
 
-  static Future<Query> removeCostRecord(String snapshotKey) async {
+  Future<Query> removeCostRecord(String snapshotKey) async {
     String accountKey = await _getAccountKey();
 
     reference
@@ -71,13 +66,13 @@ class Database {
     return queryExpense();
   }
 
-  static Future<Query> removeAll() async {
+  Future<Query> removeAll() async {
     reference.remove();
 
     return queryExpense();
   }
 
-  static Future<StreamSubscription<Event>> getSumStream(
+  Future<StreamSubscription<Event>> getSumStream(
       String snapshotKey, void onData(String name)) async {
     String accountKey = await _getAccountKey();
 
@@ -95,9 +90,9 @@ class Database {
 
     return subscription;
   }
-}
 
-Future<String> _getAccountKey() async => 'key_example';
+  Future<String> _getAccountKey() async => uid;
+}
 
 String _getCurrentNow() =>
     DateFormat('dd-MM-yyyy HH:mm:ss').format(new DateTime.now());

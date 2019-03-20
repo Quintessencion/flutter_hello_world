@@ -6,9 +6,10 @@ import 'package:flutter_hello_world/database/database.dart';
 
 class EditSumPage extends StatefulWidget {
   static String routeName = '/edit_sum_page';
+  Database database;
   String snapshotKey;
 
-  EditSumPage({Key key, this.snapshotKey}) : super(key: key);
+  EditSumPage({Key key, this.snapshotKey, this.database}) : super(key: key);
 
   @override
   _EditSumPageState createState() => new _EditSumPageState();
@@ -21,7 +22,8 @@ class _EditSumPageState extends BaseState<EditSumPage> {
   @override
   void initState() {
     if (widget.snapshotKey != null) {
-      Database.getSumStream(widget.snapshotKey, _updateSum)
+      widget.database
+          .getSumStream(widget.snapshotKey, _updateSum)
           .then((StreamSubscription s) => _subscriptionName = s);
     }
 
@@ -69,11 +71,11 @@ class _EditSumPageState extends BaseState<EditSumPage> {
     }
 
     if (widget.snapshotKey != null) {
-      Database.saveSum(widget.snapshotKey, value).then((nothing) => back());
+      widget.database
+          .saveSum(widget.snapshotKey, value)
+          .then((nothing) => back());
     } else {
-      Database.createCostRecord().then((String snapshotKey) {
-        Database.saveSum(snapshotKey, value).then((nothing) => back());
-      });
+      widget.database.createCostRecord(value).then((nothing) => back());
     }
   }
 
