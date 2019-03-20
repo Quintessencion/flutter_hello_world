@@ -26,10 +26,10 @@ class Database {
         .orderByChild(TIME_CREATION);
   }
 
-  static Future<String> createExpenseRecord() async {
+  static Future<String> createCostRecord() async {
     String noteKey = await _getAccountKey();
 
-    var mountain = <String, dynamic>{
+    var note = <String, dynamic>{
       SUM: '',
       TIME_CREATION: _getCurrentNow(),
     };
@@ -41,7 +41,7 @@ class Database {
         .child(COST_DATA)
         .push();
 
-    reference.set(mountain);
+    reference.set(note);
 
     return reference.key;
   }
@@ -58,7 +58,7 @@ class Database {
         .set(name);
   }
 
-  static Future<Query> removeExpenseRecord(String noteId) async {
+  static Future<Query> removeCostRecord(String noteId) async {
     String accountKey = await _getAccountKey();
 
     reference
@@ -89,11 +89,8 @@ class Database {
         .child(SUM)
         .onValue
         .listen((Event event) {
-      String name = event.snapshot.value as String;
-      if (name == null) {
-        name = "";
-      }
-      onData(name);
+      String sum = event.snapshot.value as String;
+      onData(sum == null ? "" : sum);
     });
 
     return subscription;

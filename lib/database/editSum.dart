@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hello_world/database/database.dart';
 
 class EditSumPage extends StatefulWidget {
-  static String routeName = '/edit_sum';
+  static String routeName = '/edit_sum_page';
+  final String snapshotKey;
 
-  final String noteId;
-
-  EditSumPage({Key key, this.noteId}) : super(key: key);
+  EditSumPage({Key key, this.snapshotKey}) : super(key: key);
 
   @override
   _EditSumPageState createState() => new _EditSumPageState();
@@ -16,14 +15,11 @@ class EditSumPage extends StatefulWidget {
 
 class _EditSumPageState extends State<EditSumPage> {
   final _nameFieldTextController = new TextEditingController();
-
   StreamSubscription _subscriptionName;
 
   @override
   void initState() {
-    _nameFieldTextController.clear();
-
-    Database.getSumStream(widget.noteId, _updateSum)
+    Database.getSumStream(widget.snapshotKey, _updateSum)
         .then((StreamSubscription s) => _subscriptionName = s);
 
     super.initState();
@@ -31,6 +27,7 @@ class _EditSumPageState extends State<EditSumPage> {
 
   @override
   void dispose() {
+    _nameFieldTextController.clear();
     if (_subscriptionName != null) {
       _subscriptionName.cancel();
     }
@@ -53,7 +50,7 @@ class _EditSumPageState extends State<EditSumPage> {
                   labelText: "Enter sum",
                   hintText: "Enter the desired amount..."),
               onChanged: (String value) {
-                Database.saveSum(widget.noteId, value);
+                Database.saveSum(widget.snapshotKey, value);
               },
             ),
           )
@@ -62,9 +59,9 @@ class _EditSumPageState extends State<EditSumPage> {
     );
   }
 
-  void _updateSum(String name) {
+  void _updateSum(String sum) {
     _nameFieldTextController.value = _nameFieldTextController.value.copyWith(
-      text: name,
+      text: sum,
     );
   }
 }

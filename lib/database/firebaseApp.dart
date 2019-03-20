@@ -2,7 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hello_world/database/database.dart';
-import 'package:flutter_hello_world/database/edit_mountain.dart';
+import 'package:flutter_hello_world/database/editSum.dart';
 
 class FirebaseApp extends StatelessWidget {
   @override
@@ -49,7 +49,7 @@ class _ListExpenseState extends State<ListExpense> {
               Animation<double> animation,
               int index,
             ) {
-              String noteId = snapshot.key;
+              String snapshotKey = snapshot.key;
               Map map = snapshot.value;
               String sum = map[Database.SUM] as String;
               return Column(
@@ -57,10 +57,10 @@ class _ListExpenseState extends State<ListExpense> {
                   ListTile(
                     leading: IconButton(
                       icon: Icon(Icons.delete),
-                      onPressed: () => _remove(noteId),
+                      onPressed: () => _remove(snapshotKey),
                     ),
-                    title: Text('$sum'),
-                    onTap: () => _edit(noteId),
+                    title: Text('$sum ₽'),
+                    onTap: () => _edit(snapshotKey),
                   ),
                   Divider(height: 2.0),
                 ],
@@ -68,7 +68,7 @@ class _ListExpenseState extends State<ListExpense> {
             },
           )),
           RaisedButton(
-            child: Text('Delete all items'),
+            child: Text('Delete all notes'),
             onPressed: _removeAll,
             color: Colors.white,
             textColor: Colors.black,
@@ -78,7 +78,7 @@ class _ListExpenseState extends State<ListExpense> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text("Home")),
+      appBar: AppBar(title: Text("Costs")),
       body: body,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
@@ -87,15 +87,15 @@ class _ListExpenseState extends State<ListExpense> {
     );
   }
 
-  _createExpenseRecord() => Database.createExpenseRecord()
-      .then((String mountainKey) => _edit(mountainKey));
+  _createExpenseRecord() => Database.createCostRecord()
+      .then((String snapshotKey) => _edit(snapshotKey));
 
-  _remove(String noteId) => Database.removeExpenseRecord(noteId)
+  _remove(String snapshotKey) => Database.removeCostRecord(snapshotKey)
       .then((Query query) => _reInitState(query));
 
-  void _edit(String noteId) {
+  void _edit(String snapshotKey) {
     var route = MaterialPageRoute(
-      builder: (context) => EditSumPage(noteId: noteId),
+      builder: (context) => EditSumPage(snapshotKey: snapshotKey),
     );
     Navigator.of(context).push(route);
   }
