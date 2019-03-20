@@ -22,10 +22,6 @@ class ReduxApp extends StatelessWidget {
             builder: (BuildContext context, Store<AppState> store) =>
                 MyHomePage(store),
           ),
-          routes: <String, WidgetBuilder>{
-            "/main": (BuildContext context) => MyHomePage(),
-            "/second": (BuildContext context) => MyBody(),
-          },
         ));
   }
 }
@@ -38,7 +34,7 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Redux Items')),
+      appBar: AppBar(title: Text('Items')),
       body: StoreConnector<AppState, _ViewModel>(
         converter: (Store<AppState> store) => _ViewModel.create(store),
         onInit: (store) => store.dispatch(GitItemsAction()),
@@ -66,7 +62,21 @@ class AddItemWidget extends StatefulWidget {
 }
 
 class _AddItemState extends BaseScreenState<AddItemWidget> {
+//  StreamSubscription _itemSubscription;
   final TextEditingController controller = TextEditingController();
+
+//  @override
+//  void initState() {
+//    getStream(widget.model.onUpdateItem)
+//        .then((StreamSubscription s) => _itemSubscription = s);
+//    super.initState();
+//  }
+
+//  @override
+//  void dispose() {
+//    _itemSubscription.cancel();
+//    super.dispose();
+//  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,13 +88,29 @@ class _AddItemState extends BaseScreenState<AddItemWidget> {
             EdgeInsets.only(left: 20.0, right: 20.0, top: 8.0, bottom: 8.0),
       ),
       onSubmitted: (String s) {
-        widget.model.onAddItem(s);
+        widget.model.onAddItem(s, "Group 1");
         controller.text = '';
         showToast('Item added');
       },
     );
   }
 }
+
+//Future<StreamSubscription<Event>> getStream(Function(Item) onUpdateItem) async {
+//  StreamSubscription<Event> subscription = FirebaseDatabase.instance
+//      .reference()
+//      .child("Items")
+//      .onChildChanged
+//      .listen((Event event) {
+//    var key = event.snapshot.key;
+//    var snapshot = event.snapshot;
+//    var value1 = snapshot.value;
+//    var value = event.snapshot.value;
+//    onUpdateItem(value);
+//  });
+//
+//  return subscription;
+//}
 
 class ItemListWidget extends StatefulWidget {
   final _ViewModel model;
@@ -96,33 +122,28 @@ class ItemListWidget extends StatefulWidget {
 }
 
 class _ItemListWidgetState extends BaseScreenState<ItemListWidget> {
-  var _colorCounter = 1;
-
   @override
   Widget build(BuildContext context) {
     return ListView(
         children: widget.model.items.map(
       (Item item) {
-        _colorCounter++;
         return Container(
-            color:
-                _colorCounter % 2 == 0 ? Color(0xFF00f7ff) : Colors.amberAccent,
             child: Column(children: <Widget>[
-              ListTile(
-                title: Text(item.body),
-                leading: IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () => widget.model.onRemoveItem(item),
-                ),
-                trailing: Checkbox(
-                  value: item.completed,
-                  onChanged: (b) {
-                    openScreen(MyBody());
-                  },
-                ),
-              ),
-              Divider(color: Colors.white),
-            ]));
+          ListTile(
+            title: Text(item.body),
+            leading: IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: () => widget.model.onRemoveItem(item),
+            ),
+            trailing: Checkbox(
+              value: item.completed,
+              onChanged: (b) {
+                openScreen(MyBody());
+              },
+            ),
+          ),
+          Divider(color: Colors.white),
+        ]));
       },
     ).toList());
   }
@@ -144,7 +165,9 @@ class RemoveItemButton extends StatelessWidget {
 
 class _ViewModel {
   final List<Item> items;
-  final Function(String) onAddItem;
+  final Function(String, String) onAddItem;
+
+//  final Function(Item) onUpdateItem;
   final Function(Item) onRemoveItem;
   final Function() onRemoveItems;
   final Function(Item) onCompleted;
@@ -152,21 +175,26 @@ class _ViewModel {
   _ViewModel(
       {this.items,
       this.onAddItem,
+//      this.onUpdateItem,
       this.onRemoveItem,
       this.onRemoveItems,
       this.onCompleted});
 
   factory _ViewModel.create(Store<AppState> store) {
-    _onAddITem(String body) {
-      store.dispatch(AddItemAction(body));
+    _onAddITem(String body, String group) {
+      store.dispatch(AddItemAction(body, group));
     }
+
+//    _onUpdateItem(Item item) {
+//      store.dispatch(UpdateItemAction(item));
+//    }
 
     _onRemoveItem(Item item) {
       store.dispatch(RemoveItemAction(item));
     }
 
     _onRemoveItems() {
-      store.dispatch(RemoveItemsAction());
+      store.dispatch(RemoveItemsAction("Items"));
     }
 
     _onCompleted(Item item) {
@@ -176,6 +204,7 @@ class _ViewModel {
     return _ViewModel(
         items: store.state.items,
         onAddItem: _onAddITem,
+//        onUpdateItem: _onUpdateItem,
         onRemoveItem: _onRemoveItem,
         onRemoveItems: _onRemoveItems,
         onCompleted: _onCompleted);

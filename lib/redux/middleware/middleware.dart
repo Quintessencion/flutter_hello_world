@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter_hello_world/redux/actions/actions.dart';
 import 'package:flutter_hello_world/redux/middleware/loadItemMiddleware.dart';
 import 'package:flutter_hello_world/redux/middleware/saveStateItemMiddleware.dart';
-import 'package:flutter_hello_world/redux/middleware/testMiddleware.dart';
+import 'package:flutter_hello_world/redux/middleware/firebaseMiddleware.dart';
 import 'package:flutter_hello_world/redux/model/appState.dart';
 import 'package:redux/redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,7 +20,7 @@ List<Middleware<AppState>> appStateMiddleware(
     TypedMiddleware<AppState, RemoveItemsAction>(SaveStateItemMiddleware()),
     TypedMiddleware<AppState, GitItemsAction>(LoadItemMiddleware()),
     TypedMiddleware<AppState, ItemCompletedAction>(SaveStateItemMiddleware()),
-    TestMiddleware(),
+    FirebaseMiddleware(),
   ];
 }
 

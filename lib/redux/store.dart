@@ -20,7 +20,10 @@ AppState appStateReducer(AppState state, action) {
 }
 
 Reducer<List<Item>> itemReducer = combineReducers<List<Item>>([
-  TypedReducer<List<Item>, AddItemAction>((List<Item> items, AddItemAction action) => addItemReducer(items, action)),
+  TypedReducer<List<Item>, AddItemAction>(
+      (List<Item> items, AddItemAction action) =>
+          addItemReducer(items, action)),
+//  TypedReducer<List<Item>, UpdateItemAction>(updateItemReducer),
   TypedReducer<List<Item>, RemoveItemAction>(removeItemReducer),
   TypedReducer<List<Item>, RemoveItemsAction>(removeItemsReducer),
   TypedReducer<List<Item>, LoadedItemAction>(loadItemsReducer),
@@ -32,6 +35,11 @@ List<Item> addItemReducer(List<Item> items, AddItemAction action) {
     ..addAll(items)
     ..add(Item(id: action.id, body: action.item));
 }
+
+//List<Item> updateItemReducer(List<Item> items, UpdateItemAction action) {
+////  items.forEach((Item i) => {});
+//  return items;
+//}
 
 List<Item> removeItemReducer(List<Item> items, RemoveItemAction action) {
   return List.unmodifiable(List.from(items)..remove(action.item));

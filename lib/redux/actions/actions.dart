@@ -1,14 +1,21 @@
 import 'package:flutter_hello_world/redux/model/itemState.dart';
 
 class AddItemAction {
+  final String group;
   static int _id = 0;
   final String item;
 
-  AddItemAction(this.item) {
+  AddItemAction(this.item, this.group) {
     _id++;
   }
 
   get id => _id;
+}
+
+class UpdateItemAction {
+  final Item item;
+
+  UpdateItemAction(this.item);
 }
 
 class RemoveItemAction {
@@ -17,7 +24,11 @@ class RemoveItemAction {
   RemoveItemAction(this.item);
 }
 
-class RemoveItemsAction {}
+class RemoveItemsAction {
+  final String group;
+
+  RemoveItemsAction(this.group);
+}
 
 class GitItemsAction {}
 
