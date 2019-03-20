@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hello_world/database/BaseState.dart';
 import 'package:flutter_hello_world/database/database.dart';
 import 'package:flutter_hello_world/database/editSum.dart';
 
@@ -23,7 +24,7 @@ class ListExpense extends StatefulWidget {
   _ListExpenseState createState() => _ListExpenseState();
 }
 
-class _ListExpenseState extends State<ListExpense> {
+class _ListExpenseState extends BaseState<ListExpense> {
   Query _query;
 
   @override
@@ -82,23 +83,19 @@ class _ListExpenseState extends State<ListExpense> {
       body: body,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: _createExpenseRecord,
+        onPressed: _createCostRecord,
       ),
     );
   }
 
-  _createExpenseRecord() => Database.createCostRecord()
-      .then((String snapshotKey) => _edit(snapshotKey));
+  _createCostRecord() => openScreen(EditSumPage());
+
+  void _edit(String snapshotKey) {
+    openScreen(EditSumPage(snapshotKey: snapshotKey));
+  }
 
   _remove(String snapshotKey) => Database.removeCostRecord(snapshotKey)
       .then((Query query) => _reInitState(query));
-
-  void _edit(String snapshotKey) {
-    var route = MaterialPageRoute(
-      builder: (context) => EditSumPage(snapshotKey: snapshotKey),
-    );
-    Navigator.of(context).push(route);
-  }
 
   _removeAll() =>
       Database.removeAll().then((Query query) => _reInitState(query));
