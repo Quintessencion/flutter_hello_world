@@ -47,18 +47,27 @@ class GenerateScreenState extends State<GenerateScreen> {
 
   Future<void> _captureAndSharePng() async {
     try {
-      RenderRepaintBoundary boundary =
-          globalKey.currentContext.findRenderObject();
-      var image = await boundary.toImage();
-      ByteData byteData = await image.toByteData(format: ImageByteFormat.png);
-      Uint8List pngBytes = byteData.buffer.asUint8List();
+//      RenderRepaintBoundary boundary = globalKey.currentContext.findRenderObject();
+//      var image = await boundary.toImage();
+//      ByteData byteData = await image.toByteData(format: ImageByteFormat.png);
+//      Uint8List pngBytes = byteData.buffer.asUint8List();
+//
+//      final tempDir = await getTemporaryDirectory();
+//      final file = await new File('${tempDir.path}/image.png').create();
+//      await file.writeAsBytes(pngBytes);
+//
+//      final channel = const MethodChannel('channel:me.alfian.share/share');
+//      channel.invokeMethod('shareFile', 'image.png');
+
+      final ByteData bytes = await rootBundle.load('assets/dollar.png');
+      final Uint8List list = bytes.buffer.asUint8List();
 
       final tempDir = await getTemporaryDirectory();
-      final file = await new File('${tempDir.path}/image.png').create();
-      await file.writeAsBytes(pngBytes);
+      final file = await new File('${tempDir.path}/dollar.png').create();
+      file.writeAsBytesSync(list);
 
-      final channel = const MethodChannel('channel:me.alfian.share/share');
-      channel.invokeMethod('shareFile', 'image.png');
+      final channel = const MethodChannel('channel:me.albie.share/share');
+      channel.invokeMethod('shareFile', 'dollar.png');
     } catch (e) {
       print(e.toString());
     }

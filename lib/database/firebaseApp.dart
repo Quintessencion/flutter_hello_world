@@ -61,4 +61,10 @@ class _WelcomePageState extends BaseState<WelcomePage> {
         .then((user) => openScreen(FirebaseList(user: user)))
         .catchError((error) => showToast(error.message));
   }
+
+  @override
+  void dispose() {
+    authService.signOut();
+    super.dispose();
+  }
 }
