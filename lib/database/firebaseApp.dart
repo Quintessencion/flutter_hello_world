@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hello_world/database/BaseState.dart';
 import 'package:flutter_hello_world/database/editSum.dart';
 import 'package:flutter_hello_world/database/firebaseList.dart';
+import 'package:flutter_hello_world/database/loginButton.dart';
 import 'package:flutter_hello_world/database/loginPage.dart';
 import 'package:flutter_hello_world/database/registerPage.dart';
+import 'package:flutter_hello_world/database/userProfile.dart';
 
 class FirebaseApp extends StatelessWidget {
   @override
@@ -39,12 +41,14 @@ class _WelcomePageState extends BaseState<WelcomePage> {
         children: <Widget>[
           RaisedButton(
             onPressed: () => openNamedScreen(LoginPage.routeName),
-            child: Text('Sign in'),
+            child: Text('Sign in with Email'),
           ),
           RaisedButton(
             onPressed: () => openNamedScreen(SignUpPage.routeName),
             child: Text('Sign up'),
           ),
+          LoginButton(),
+          UserProfile()
         ],
       ),
     );

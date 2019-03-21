@@ -30,9 +30,7 @@ class _FirebaseListState extends BaseState<FirebaseList> {
     super.initState();
   }
 
-  _reInitState(Query query) => setState(() {
-        _query = query;
-      });
+  _reInitState(Query query) => setState(() => _query = query);
 
   @override
   Widget build(BuildContext context) {

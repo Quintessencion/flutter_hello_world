@@ -49,6 +49,7 @@ class _EditSumPageState extends BaseState<EditSumPage> {
         children: <Widget>[
           new ListTile(
             title: new TextField(
+              keyboardType: TextInputType.numberWithOptions(),
               autofocus: true,
               controller: _nameFieldTextController,
               decoration: new InputDecoration(
