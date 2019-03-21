@@ -45,7 +45,7 @@ class _LoginPageState extends BaseState<LoginPage> {
                 initialValue: "123qwe",
               ),
               RaisedButton(
-                onPressed: signIn,
+                onPressed: emailSignIn,
                 child: Text('Sign in'),
               ),
             ],
@@ -53,14 +53,15 @@ class _LoginPageState extends BaseState<LoginPage> {
     );
   }
 
-  void signIn() async {
+  void emailSignIn() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       try {
         FirebaseAuth.instance
             .signInWithEmailAndPassword(email: _email, password: _password)
             .then((FirebaseUser user) {
-          openScreenClearTop(FirebaseList(user: user));
+//          openScreenClearTop(FirebaseList(user: user));
+          openScreen(FirebaseList(user: user));
         });
       } catch (exception) {
         showToast(exception.message);

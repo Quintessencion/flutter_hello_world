@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hello_world/database/BaseState.dart';
 import 'package:flutter_hello_world/database/database.dart';
 import 'package:flutter_hello_world/database/editSum.dart';
+import 'package:flutter_hello_world/database/qrGenerator.dart';
 
 class FirebaseList extends StatefulWidget {
   static const String routeName = "/note_list";
@@ -76,7 +77,16 @@ class _FirebaseListState extends BaseState<FirebaseList> {
       );
     }
     return Scaffold(
-      appBar: AppBar(title: Text("Costs")),
+      appBar: AppBar(
+        title: Text("Costs"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.share),
+            onPressed: () => openScreen(GenerateScreen(widget.user)),
+            tooltip: "Share accout",
+          ),
+        ],
+      ),
       body: body,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
