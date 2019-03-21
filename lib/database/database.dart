@@ -67,7 +67,9 @@ class Database {
   }
 
   Future<Query> removeAll() async {
-    reference.remove();
+    String accountKey = await _getAccountKey();
+
+    reference.child(USERS).child(accountKey).child(COST_DATA).remove();
 
     return queryExpense();
   }
