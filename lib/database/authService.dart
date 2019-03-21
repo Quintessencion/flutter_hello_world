@@ -1,10 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AuthService {
-  // Dependencies
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Firestore _db = Firestore.instance;
@@ -14,15 +13,14 @@ class AuthService {
   Observable<Map<String, dynamic>> profile;
   PublishSubject loading = PublishSubject();
 
-  // constructor
   AuthService() {
     user = Observable(_auth.onAuthStateChanged);
 
-    profile = user.switchMap((FirebaseUser u) {
-      if (u != null) {
+    profile = user.switchMap((FirebaseUser user) {
+      if (user != null) {
         return _db
             .collection('users')
-            .document(u.uid)
+            .document(user.uid)
             .snapshots()
             .map((snap) => snap.data);
       } else {
@@ -48,7 +46,6 @@ class AuthService {
     updateUserData(user);
 
     loading.add(false);
-    print("signed in " + user.displayName);
     return user;
   }
 

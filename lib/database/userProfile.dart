@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hello_world/database/BaseState.dart';
 import 'package:flutter_hello_world/database/authService.dart';
 
 class UserProfile extends StatefulWidget {
@@ -6,7 +7,7 @@ class UserProfile extends StatefulWidget {
   _UserProfileState createState() => _UserProfileState();
 }
 
-class _UserProfileState extends State<UserProfile> {
+class _UserProfileState extends BaseState<UserProfile> {
   Map<String, dynamic> _profile;
   bool _loading = false;
 
@@ -20,18 +21,7 @@ class _UserProfileState extends State<UserProfile> {
 
   @override
   Widget build(BuildContext context) {
-    var text = "";
-    if (_profile != null) {
-      if (_profile.containsKey("displayName")) {
-        text = "name: " + _profile["displayName"];
-      }
-      if (_profile.containsKey("uid")) {
-        text = text + "\nuid: " + _profile["uid"];
-      }
-    }
-
     return Column(children: <Widget>[
-      Container(padding: EdgeInsets.all(20), child: Text(text)),
       CircularProgressIndicator(
         valueColor: AlwaysStoppedAnimation<Color>(
             _loading ? Colors.white : Colors.transparent),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hello_world/database/BaseState.dart';
+import 'package:flutter_hello_world/database/authService.dart';
 import 'package:flutter_hello_world/database/editSum.dart';
 import 'package:flutter_hello_world/database/firebaseList.dart';
 import 'package:flutter_hello_world/database/loginButton.dart';
@@ -45,12 +46,19 @@ class _WelcomePageState extends BaseState<WelcomePage> {
           ),
           RaisedButton(
             onPressed: () => openNamedScreen(SignUpPage.routeName),
-            child: Text('Sign up'),
+            child: Text('Sign up with Email'),
           ),
-          LoginButton(),
+          LoginButton(signIn, authService.signOut),
           UserProfile()
         ],
       ),
     );
+  }
+
+  signIn() {
+    authService
+        .googleSignIn()
+        .then((user) => openScreen(FirebaseList(user: user)))
+        .catchError((error) => showToast(error.message));
   }
 }
