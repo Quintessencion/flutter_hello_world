@@ -27,7 +27,6 @@ dependencies:
   shared_preferences: ^0.5.1+1
   flutter_redux_dev_tools: ^0.3.0
   intl: ^0.15.2
-  tuple: ^1.0.2
 
   fluttertoast: ^3.0.3
 
