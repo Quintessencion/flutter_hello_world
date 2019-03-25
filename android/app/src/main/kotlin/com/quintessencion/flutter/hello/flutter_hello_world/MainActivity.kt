@@ -23,6 +23,7 @@ class MainActivity : FlutterActivity() {
 
     companion object {
         const val DEEP_LINKING_CHANNEL = "cost_controller.flutter.io/deep_linking"
+        const val MESSAGE_CHANNEL = "cost_controller.flutter.io/message"
     }
 
     var data: Uri? = null
@@ -38,6 +39,20 @@ class MainActivity : FlutterActivity() {
                 result.notImplemented()
             }
         }
+
+        MethodChannel(flutterView, MESSAGE_CHANNEL).setMethodCallHandler { call, result ->
+            if (call.method == "sendMessage") {
+                val uri: String = call.argument("uri")!!
+                val isSuccess = sendMessage(uri)
+                if (isSuccess) {
+                    result.success(-1)
+                } else {
+                    result.notImplemented()
+                }
+            } else {
+                result.notImplemented()
+            }
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -46,4 +61,18 @@ class MainActivity : FlutterActivity() {
     }
 
     private fun getDeeplinkingKey() = data.toString()
+
+    private fun sendMessage(uri: String): Boolean {
+        val sendIntent = Intent(Intent.ACTION_SEND)
+        sendIntent.putExtra(Intent.EXTRA_TEXT, uri)
+        sendIntent.type = "text/plain"
+
+        try {
+            startActivity(sendIntent)
+        } catch (ex: android.content.ActivityNotFoundException) {
+            print(ex.localizedMessage)
+            return false
+        }
+        return true
+    }
 }

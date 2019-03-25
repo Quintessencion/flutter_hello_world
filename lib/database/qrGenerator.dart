@@ -1,13 +1,10 @@
 import 'dart:async';
-import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class GenerateScreen extends StatefulWidget {
@@ -24,6 +21,9 @@ class GenerateScreenState extends State<GenerateScreen> {
   static const double _topSectionBottomPadding = 20.0;
   static const double _topSectionHeight = 50.0;
 
+  static const platform =
+      const MethodChannel('cost_controller.flutter.io/message');
+
   GlobalKey globalKey = new GlobalKey();
   String _dataString = "Ку-ку, сука, MF!";
   String _inputErrorText;
@@ -37,7 +37,7 @@ class GenerateScreenState extends State<GenerateScreen> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.send),
-            onPressed: _captureAndSharePng,
+            onPressed: _sendMessage,
           )
         ],
       ),
@@ -45,32 +45,13 @@ class GenerateScreenState extends State<GenerateScreen> {
     );
   }
 
-  Future<void> _captureAndSharePng() async {
-//    try {
-//      RenderRepaintBoundary boundary = globalKey.currentContext.findRenderObject();
-//      var image = await boundary.toImage();
-//      ByteData byteData = await image.toByteData(format: ImageByteFormat.png);
-//      Uint8List pngBytes = byteData.buffer.asUint8List();
-//
-//      final tempDir = await getTemporaryDirectory();
-//      final file = await new File('${tempDir.path}/image.png').create();
-//      await file.writeAsBytes(pngBytes);
-//
-//      final channel = const MethodChannel('channel:me.alfian.share/share');
-//      channel.invokeMethod('shareFile', 'image.png');
-//
-//      final ByteData bytes = await rootBundle.load('assets/dollar.png');
-//      final Uint8List list = bytes.buffer.asUint8List();
-//
-//      final tempDir = await getTemporaryDirectory();
-//      final file = await new File('${tempDir.path}/dollar.png').create();
-//      file.writeAsBytesSync(list);
-//
-//      final channel = const MethodChannel('channel:me.albie.share/share');
-//      channel.invokeMethod('shareFile', 'dollar.png');
-//    } catch (e) {
-//      print(e.toString());
-//    }
+  Future<void> _sendMessage() async {
+    try {
+      platform.invokeMethod("sendMessage",
+          {"uri": "http://www.cost-controller.com/id=${widget.user.uid}"});
+    } on PlatformException catch (error) {
+      print("Message sending: ${error.message}");
+    }
   }
 
   _contentWidget() {
