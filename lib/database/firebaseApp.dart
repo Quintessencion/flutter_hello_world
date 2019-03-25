@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hello_world/database/BaseState.dart';
 import 'package:flutter_hello_world/database/authService.dart';
 import 'package:flutter_hello_world/database/editSum.dart';
@@ -31,7 +34,17 @@ class WelcomePage extends StatefulWidget {
   State<StatefulWidget> createState() => _WelcomePageState();
 }
 
-class _WelcomePageState extends BaseState<WelcomePage> {
+class _WelcomePageState extends BaseState<WelcomePage>
+    with WidgetsBindingObserver {
+  static const platform =
+      const MethodChannel('cost_controller.flutter.io/deep_linking');
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +77,26 @@ class _WelcomePageState extends BaseState<WelcomePage> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     authService.signOut();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state.index == 0) {
+      _getIntent();
+    }
+  }
+
+  Future<void> _getIntent() async {
+    try {
+      final String result = await platform.invokeMethod("getDeepLinkingKey");
+
+      String userUid = result.split("=")[1];
+      openScreen(FirebaseList(userUid: userUid));
+    } catch (e) {
+      print("Deep linking: data is empty");
+    }
   }
 }

@@ -8,7 +8,6 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Firestore _db = Firestore.instance;
 
-  // Shared State for Widgets
   Observable<FirebaseUser> user;
   Observable<Map<String, dynamic>> profile;
   PublishSubject loading = PublishSubject();

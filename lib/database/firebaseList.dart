@@ -10,11 +10,12 @@ import 'package:flutter_hello_world/database/qrGenerator.dart';
 class FirebaseList extends StatefulWidget {
   static const String routeName = "/note_list";
 
+  final String userUid;
   final FirebaseUser user;
   Database _database;
 
-  FirebaseList({Key key, this.user}) : super(key: key) {
-    _database = Database(user.uid);
+  FirebaseList({Key key, this.userUid = "", this.user}) : super(key: key) {
+    _database = Database(userUid.isEmpty ? user.uid : userUid);
   }
 
   @override

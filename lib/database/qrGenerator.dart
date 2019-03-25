@@ -46,7 +46,7 @@ class GenerateScreenState extends State<GenerateScreen> {
   }
 
   Future<void> _captureAndSharePng() async {
-    try {
+//    try {
 //      RenderRepaintBoundary boundary = globalKey.currentContext.findRenderObject();
 //      var image = await boundary.toImage();
 //      ByteData byteData = await image.toByteData(format: ImageByteFormat.png);
@@ -58,19 +58,19 @@ class GenerateScreenState extends State<GenerateScreen> {
 //
 //      final channel = const MethodChannel('channel:me.alfian.share/share');
 //      channel.invokeMethod('shareFile', 'image.png');
-
-      final ByteData bytes = await rootBundle.load('assets/dollar.png');
-      final Uint8List list = bytes.buffer.asUint8List();
-
-      final tempDir = await getTemporaryDirectory();
-      final file = await new File('${tempDir.path}/dollar.png').create();
-      file.writeAsBytesSync(list);
-
-      final channel = const MethodChannel('channel:me.albie.share/share');
-      channel.invokeMethod('shareFile', 'dollar.png');
-    } catch (e) {
-      print(e.toString());
-    }
+//
+//      final ByteData bytes = await rootBundle.load('assets/dollar.png');
+//      final Uint8List list = bytes.buffer.asUint8List();
+//
+//      final tempDir = await getTemporaryDirectory();
+//      final file = await new File('${tempDir.path}/dollar.png').create();
+//      file.writeAsBytesSync(list);
+//
+//      final channel = const MethodChannel('channel:me.albie.share/share');
+//      channel.invokeMethod('shareFile', 'dollar.png');
+//    } catch (e) {
+//      print(e.toString());
+//    }
   }
 
   _contentWidget() {
@@ -140,7 +140,7 @@ class GenerateScreenState extends State<GenerateScreen> {
 
   _createQRImage(double bodyHeight) {
     return QrImage(
-      data: widget.user.uid,
+      data: "app://cost-controller/id=${widget.user.uid}",
       size: 0.5 * bodyHeight,
       onError: (ex) {
         print("[QR] ERROR - $ex");
